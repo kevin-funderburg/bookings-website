@@ -30,6 +30,7 @@ CREATE TABLE Rooms (
     PRIMARY KEY(roomID),
     FOREIGN KEY(hotelID) REFERENCES Hotels(hotelID)
 );
+                           
 INSERT INTO Rooms VALUES (1, 5, 102, 1, 2);
 INSERT INTO Rooms VALUES (3, 4, 301, 0, 2);
 INSERT INTO Rooms VALUES (2, 5, 201, 0, 3);
@@ -58,6 +59,9 @@ CREATE TABLE Dealerships (
 INSERT INTO Dealerships VALUES (1, 'First Texas Honda');
 INSERT INTO Dealerships VALUES (2, 'Toyota of Austin');
 INSERT INTO Dealerships VALUES (3, 'Tesla');
+INSERT INTO Dealerships VALUES (4, 'Classic Chevrolet');
+INSERT INTO Dealerships VALUES (5, 'Nissan of Fortworth');
+INSERT INTO Dealerships VALUES (6, 'Texas CarOne');                           
 
 CREATE TABLE Cars (
     carID     INTEGER,
