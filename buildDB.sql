@@ -14,6 +14,12 @@ CREATE TABLE Hotels (
 INSERT INTO Hotels VALUES (1, 'Ambassador');
 INSERT INTO Hotels VALUES (2, 'Marriot');
 INSERT INTO Hotels VALUES (3, 'Best Western');
+INSERT INTO Hotels VALUES (4, 'Alpine Inn');
+INSERT INTO Hotels VALUES (5, 'Gold Country');
+INSERT INTO Hotels VALUES (6, 'Route 78');
+INSERT INTO Hotels VALUES (7, 'Claw Inn');
+INSERT INTO Hotels VALUES (8, 'Dockyard Place');
+
 
 CREATE TABLE Rooms (
     roomID    INTEGER,
