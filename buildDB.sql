@@ -19,7 +19,7 @@ INSERT INTO Hotels VALUES (5, 'Gold Country');
 INSERT INTO Hotels VALUES (6, 'Route 78');
 INSERT INTO Hotels VALUES (7, 'Claw Inn');
 INSERT INTO Hotels VALUES (8, 'Dockyard Place');
-
+INSERT INTO Hotels VALUES (9, 'Kate's Place');
 
 CREATE TABLE Rooms (
     roomID    INTEGER,
@@ -30,11 +30,24 @@ CREATE TABLE Rooms (
     PRIMARY KEY(roomID),
     FOREIGN KEY(hotelID) REFERENCES Hotels(hotelID)
 );
-
-INSERT INTO Rooms VALUES (1, 1, 101, 0, 4);
-INSERT INTO Rooms VALUES (2, 2, 250, 1, 2);
+INSERT INTO Rooms VALUES (1, 5, 102, 1, 2);
+INSERT INTO Rooms VALUES (3, 4, 301, 0, 2);
+INSERT INTO Rooms VALUES (2, 5, 201, 0, 3);
+INSERT INTO Rooms VALUES (1, 6, 104, 0, 2);
+INSERT INTO Rooms VALUES (2, 6, 202, 0, 4);
+INSERT INTO Rooms VALUES (1, 7, 103, 1, 2);
+INSERT INTO Rooms VALUES (2, 7, 202, 1, 4);
+INSERT INTO Rooms VALUES (3, 8, 301, 0, 3);
+INSERT INTO Rooms VALUES (2, 8, 204, 0, 2);
+INSERT INTO Rooms VALUES (1, 9, 101, 0, 3);
+INSERT INTO Rooms VALUES (2, 9, 204, 1, 2);                           
+INSERT INTO Rooms VALUES (1, 1, 103, 1, 2);                             
+INSERT INTO Rooms VALUES (2, 2, 201, 0, 2);                           
+INSERT INTO Rooms VALUES (1, 2, 101, 0, 4);
+INSERT INTO Rooms VALUES (2, 1, 250, 1, 2);
 INSERT INTO Rooms VALUES (3, 3, 300, 0, 4);
-INSERT INTO Rooms VALUES (4, 1, 500, 0, 2);
+INSERT INTO Rooms VALUES (4, 4, 500, 0, 2);
+
 
 CREATE TABLE Dealerships (
     dealerID   INTEGER,
