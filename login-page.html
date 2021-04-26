@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="login-page.css">
+  <script defer src="login-page.js"></script>
+</head>
+
+<body>
+  <main id="main-holder">
+    <h1 id="login-header">Bookings Website</h1>
+    <h2 id="login-header">Welcome!  Please log in.</h2>
+    <div id="login-error-msg-holder">
+      <p id="login-error-msg">Invalid username <span id="error-msg-second-line">and/or password</span></p>
+    </div>
+    
+    <form id="login-form">
+        <input type="radio" id="customer" name="user_type" value="customer">
+        <label for="customer">Customer</label><br>
+        <input type="radio" id="owner" name="user_type" value="owner">
+        <label for="owner">Owner</label><br>
+        <input type="radio" id="admin" name="user_type" value="admin">
+        <label for="admin">Admin</label>
+        <input type="text" name="username" id="username-field" class="login-form-field" placeholder="Username">
+        <input type="password" name="password" id="password-field" class="login-form-field" placeholder="Password">
+        <input type="submit" value="SIGN IN" id="login-form-submit">
+    </form>
+    Forgot Password? <br>
+    New User? <br>
+    <form id="login-form">
+        <input type="submit" value="SIGN UP" id="new_user-form-submit">
+    </form>
+  
+  </main>
+</body>
+
+</html>
