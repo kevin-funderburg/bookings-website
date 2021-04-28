@@ -1,13 +1,13 @@
-INSERT INTO Hotels (name, address)
-VALUES ('Ambassador', '72 Amy Street'),
-       ('Marriot', '75 West 85th Street'),
-       ('Best Western', '812 Winding Brook'),
-       ('Alpine Inn', '637 Real Street'),
-       ('Gold Country', '718 Fake Street'),
-       ('Route 78', '111 Route 78'),
-       ('Claw Inn', '661 Hopping Frog'),
-       ('Dockyard Place', '817 Silly Spaceman'),
-       ('Kate''s Place', '85 85th Street');
+INSERT INTO Hotels (name, city, state, address)
+VALUES ('Ambassador', 'Austin', 'Texas', '72 Amy Street'),
+       ('Marriot', 'New York', 'New York', '75 West 85th Street'),
+       ('Best Western', 'San Antonio', 'Texas', '812 Winding Brook'),
+       ('Alpine Inn', 'Seattle', 'Washington', '637 Real Street'),
+       ('Gold Country', 'San Francisco', 'California', '718 Fake Street'),
+       ('Route 78', 'Portland', 'Oregon', '11 Route 78'),
+       ('Claw Inn', 'Houston', 'Texas', '661 Hopping Frog'),
+       ('Dockyard Place', 'Chicago', 'Illinois', '817 Silly Spaceman'),
+       ('Kate''s Place', 'San Diego', 'California', '85 85th Street');
 
 
 INSERT INTO Rooms (hotelID, num, reserved, capacity)
@@ -54,7 +54,7 @@ VALUES  (1, 1, 'Honda', 'Civic', 'sedan'),
         (6, 1, 'Ford', 'Windstar', 'minivan');
 
 
-INSERT INTO Users (firstName, lastName, cardNum, address)
-VALUES	('Sammy', 'Slappy', '1234567934831234', '123 Fake Street'),
-		('Buttery', 'Biscuits', '7685746352419786', '89 Funkytown Drive'),
-		('Bounding', 'Fishfin', '9786756453647586', '76 Toasted Fudge Road');
+INSERT INTO Users (firstName, lastName, userName, passWord, cardNum, address)
+VALUES	('Sammy', 'Slappy', 'samslap', 'doodaleedoo', '1234567934831234', '123 Fake Street'),
+		('Buttery', 'Biscuits', 'butteryb', 'butteryPass', '7685746352419786', '89 Funkytown Drive'),
+		('Bounding', 'Fishfin', 'boundFish', 'fishyPass', '9786756453647586', '76 Toasted Fudge Road');

@@ -5,7 +5,7 @@ from sqlite3 import Error
 from tkinter import *
 import os
 
-DB = 'data.db'
+DB = 'data.db'  # database name
 
 
 # Designing window for registration
@@ -190,7 +190,6 @@ def run_query(sql):
     print('SQL: ' + sql)
     conn = create_connection(DB)
     cursor = conn.cursor()
-    # log.debug(sql)
     cursor.execute(sql)
     results = cursor.fetchall()
     print("Found {0} results".format(len(results)))
@@ -198,14 +197,27 @@ def run_query(sql):
     return results
 
 
-def user_search(firstName, lastName):
-    return "SELECT * FROM Users WHERE firstName = '" + firstName + "' AND lastName = '" + lastName + "';"
+def searchUserName(userName):
+    return "SELECT * FROM Users WHERE userName = '" + userName + "';"
+
+
+def getPassword(userName):
+    return "SELECT passWord FROM Users WHERE userName = '" + userName + "';"
+
+
+def getHotelsByCity(city):
+    return "SELECT * FROM Hotels WHERE city = '" + city + "';"
+
+
+def getHotelsByState(state):
+    return "SELECT * FROM Hotels WHERE state = '" + state + "';"
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Bookings Website")
     parser.add_argument('-su', '--searchusers', dest='searchUsers', nargs='?', default=None)
-
+    parser.add_argument('-hs', '--hotelsbystate', dest='hotelsByState', nargs='?', default=None)
+    parser.add_argument('-hc', '--hotelsbycity', dest='hotelsByCity', nargs='?', default=None)
     return parser.parse_args()
 
 
@@ -215,8 +227,32 @@ def main():
     args = parse_args()
 
     if args.searchUsers:
-        query = user_search('Buttery', 'Biscuits')
-        run_query(query)
+        username = args.searchUsers
+        query = searchUserName(username)
+        results = run_query(query)
+
+        print('NAME\t\t\t\tCARD NUMBER\t\t\tADDRESS')
+        for row in results:
+            print(row[str('firstName')] + ' ' +
+                  row[str('lastName')] + '\t' +
+                  row[str('cardNum')] + '\t' +
+                  row[str('address')])
+        return 0
+
+    if args.hotelsByState or args.hotelsByCity:
+        if args.hotelsByState:
+            query = getHotelsByState(args.hotelsByState)
+        else:
+            query = getHotelsByCity(args.hotelsByCity)
+
+        results = run_query(query)
+
+        print('NAME\t\t\tCITY\t\tSTATE\t\tADDRESS')
+        for row in results:
+            print(row[str('name')] + '\t\t' +
+                  row[str('city')] + '\t\t' +
+                  row[str('state')] + '\t\t' +
+                  row[str('address')])
         return 0
 
     main_account_screen()

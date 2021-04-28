@@ -8,6 +8,8 @@ DROP TABLE IF EXISTS Users;
 CREATE TABLE Hotels (
     hotelID   INTEGER,
     name      TEXT NOT NULL,
+    city      TEXT NOT NULL,
+    state     TEXT NOT NULL,
     address   TEXT NOT NULL,
     PRIMARY KEY(hotelID)
 );
@@ -44,8 +46,9 @@ CREATE TABLE Users (
     userID    INTEGER,
     firstName TEXT NOT NULL,
     lastName  TEXT NOT NULL,
+    userName  TEXT NOT NULL UNIQUE,
+    passWord  TEXT NOT NULL,
     cardNum   TEXT,
     address   TEXT NOT NULL,
     PRIMARY KEY(userID)
 );
- 
