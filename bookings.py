@@ -1,7 +1,11 @@
 # import modules
-
+import argparse
+import sqlite3
+from sqlite3 import Error
 from tkinter import *
 import os
+
+DB = 'data.db'
 
 
 # Designing window for registration
@@ -165,5 +169,58 @@ def main_account_screen():
     main_screen.mainloop()
 
 
-if __name__ == "__main__":
+def create_connection(db_file):
+    """ create a database connection to the SQLite database
+        specified by the db_file
+    :param db_file: database file
+    :return: Connection object or None
+    """
+    conn = None
+    rdb = r"{0}".format(os.path.expanduser(db_file))
+    try:
+        conn = sqlite3.connect(rdb)
+        conn.row_factory = sqlite3.Row
+    except Error as e:
+        raise e
+
+    return conn
+
+
+def run_query(sql):
+    print('SQL: ' + sql)
+    conn = create_connection(DB)
+    cursor = conn.cursor()
+    # log.debug(sql)
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    print("Found {0} results".format(len(results)))
+    cursor.close()
+    return results
+
+
+def user_search(firstName, lastName):
+    return "SELECT * FROM Users WHERE firstName = '" + firstName + "' AND lastName = '" + lastName + "';"
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Bookings Website")
+    parser.add_argument('-su', '--searchusers', dest='searchUsers', nargs='?', default=None)
+
+    return parser.parse_args()
+
+
+def main():
+    print('...starting main...')
+
+    args = parse_args()
+
+    if args.searchUsers:
+        query = user_search('Buttery', 'Biscuits')
+        run_query(query)
+        return 0
+
     main_account_screen()
+
+
+if __name__ == "__main__":
+    main()
