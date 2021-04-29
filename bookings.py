@@ -267,6 +267,11 @@ def createHotelListing(name, city, state, address):
     run_commit_query(query)
 
 
+def createDealershipListing(name, city, state, address):
+    query = queries.insertDealership(name, city, state, address)
+    run_commit_query(query)
+
+
 def test_createAccount():
     print("-----------------------------------\n"
           "Testing insertion of 3 new accounts\n"
@@ -287,12 +292,24 @@ def test_createHotelListing():
     print("\n3 hotel listings created successfully\n\n")
 
 
+def test_createDealershipListing():
+    print("-----------------------------------\n"
+          "Testing insertion of 3 car dealership listings\n"
+          "-----------------------------------")
+    createDealershipListing('Enterprise', 'Miami', 'Florida', '728 Rainy Drive')
+    createDealershipListing('Cars R Us', 'Seattle', 'Washington', '981 Shaggy Dog Lane')
+    createDealershipListing('Hertz', 'Portland', 'Oregon', '8291 Portlandia Street')
+
+    print("\n3 dealership listings created successfully\n\n")
+
+
 def test_updateAccount():
     print("-----------------------------------\n"
           "Testing updating a users account\n"
           "-----------------------------------")
     userID = getUserID('userName', 'butteryb')
     updateAccount(userID, 'address', '110 Funkytown Drive')
+
     print("\n1 account updated successfully\n\n")
 
 
@@ -318,6 +335,29 @@ def test_searchHotelsByCity():
         print("no hotels found in " + city + ", " + state)
         return
 
+    printHotelResults(results)
+
+    print("\nhotels searched successfully\n\n")
+
+
+def test_searchHotelsByState():
+    print("-----------------------------------\n"
+          "Searching database for hotels in a state\n"
+          "-----------------------------------")
+    state = 'New York'
+    query = queries.getHotelsByState(state)
+    results = run_query(query)
+
+    if len(results) == 0:
+        print("no hotels found in " + state)
+        return
+
+    printHotelResults(results)
+
+    print("\nhotels searched successfully\n\n")
+
+
+def printHotelResults(results):
     print('NAME\t\t\tCITY\t\tSTATE\t\tADDRESS')
     for row in results:
         print(row[str('name')] + '\t\t' +
@@ -325,22 +365,22 @@ def test_searchHotelsByCity():
               row[str('state')] + '\t\t' +
               row[str('address')])
 
-    print("\nhotels searched successfully\n\n")
-
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Bookings Website")
-    parser.add_argument('-ca', '--createaccount', dest='createAccount', action='store_true',
-                        help='create a dummy account')
     parser.add_argument('-rdb', '--resetdb', dest='resetdb', action='store_true',
                         help='reset the database')
     parser.add_argument('-su', '--searchusers', dest='searchUsers', nargs='?', default=None,
                         help='search database for username')
-    parser.add_argument('-hs', '--hotelsbystate', dest='hotelsByState', nargs='?', default=None,
-                        help='search database for hotels in a state')
+    parser.add_argument('-tca', '--testCreateAccount', dest='test_createAccount', action='store_true',
+                        help='create a dummy account')
     parser.add_argument('-thc', '--testHotelsByCity', dest='test_searchHotelsByCity', action='store_true',
                         help='search database for hotels in a city')
+    parser.add_argument('-ths', '--testHotelsByState', dest='test_searchHotelsByState', action='store_true',
+                        help='search database for hotels in a state')
     parser.add_argument('-thl', '--testCreateHotelListing', dest='test_createHotelListing', action='store_true',
+                        help='test inserting hotel listings')
+    parser.add_argument('-tdl', '--testCreateDealershipListing', dest='test_createDealershipListing', action='store_true',
                         help='test inserting hotel listings')
     parser.add_argument('-tua', '--testUpdateaccount', dest='test_updateAccount', action='store_true',
                         help='create a dummy account')
@@ -352,7 +392,7 @@ def parse_args():
 
 
 def main():
-    print('...starting main...')
+    print('...starting main...\n')
 
     args = parse_args()
 
@@ -369,28 +409,11 @@ def main():
                   row[str('address')])
         return 0
 
-    # if args.hotelsByState or args.hotelsByCity:
-    #
-    #     if args.hotelsByState:
-    #         query = queries.getHotelsByState(args.hotelsByState)
-    #     else:
-    #         query = queries.getHotelsByCity(args.hotelsByCity)
-    #
-    #     results = run_query(query)
-    #
-    #     print('NAME\t\t\tCITY\t\tSTATE\t\tADDRESS')
-    #     for row in results:
-    #         print(row[str('name')] + '\t\t' +
-    #               row[str('city')] + '\t\t' +
-    #               row[str('state')] + '\t\t' +
-    #               row[str('address')])
-    #     return 0
-
     if args.resetdb:
         resetDB()
         return 0
 
-    if args.createAccount:
+    if args.test_createAccount:
         test_createAccount()
         return 0
 
@@ -402,22 +425,33 @@ def main():
         test_createHotelListing()
         return 0
 
+    if args.test_createDealershipListing:
+        test_createDealershipListing()
+        return 0
+
     if args.test_searchHotelsByCity:
         test_searchHotelsByCity()
+        return 0
+
+    if args.test_searchHotelsByState:
+        test_searchHotelsByState()
         return 0
 
     if args.test_updateHotel:
         test_updateHotel()
         return 0
 
-    if args.testAll:
+    if args.test_all:
         test_createAccount()
         test_updateAccount()
+        test_createDealershipListing()
         test_createHotelListing()
         test_updateHotel()
+        test_searchHotelsByState()
+        test_searchHotelsByCity()
+        return 0
 
-
-    main_account_screen()
+    # main_account_screen()
 
 
 if __name__ == "__main__":

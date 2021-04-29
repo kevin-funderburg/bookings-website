@@ -44,6 +44,11 @@ def insertHotel(name, city, state, address):
            "VALUES ('" + name + "', '" + city + "', '" + state + "', '" + address + "');"
 
 
+def insertDealership(name, city, state, address):
+    return "INSERT INTO Dealerships(name, city, state, address)\n" \
+           "VALUES ('" + name + "', '" + city + "', '" + state + "', '" + address + "');"
+
+
 def resetDB():
     return """DROP TABLE IF EXISTS Rooms;
 DROP TABLE IF EXISTS Hotels;
