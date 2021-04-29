@@ -4,7 +4,7 @@ import sqlite3
 from sqlite3 import Error
 from tkinter import *
 import os
-import queries
+import queries  # holds the SQL queries for out database
 
 DB = 'data.db'  # database name
 
@@ -198,20 +198,23 @@ def run_query(sql):
     return results
 
 
-def searchUserName(userName):
-    return "SELECT * FROM Users WHERE userName = '" + userName + "';"
+def run_commit_query(sql):
+    """execute query then commit to database
 
+    good for updating, inserting or deleting
 
-def getPassword(userName):
-    return "SELECT passWord FROM Users WHERE userName = '" + userName + "';"
-
-
-def getHotelsByCity(city):
-    return "SELECT * FROM Hotels WHERE city = '" + city + "';"
-
-
-def getHotelsByState(state):
-    return "SELECT * FROM Hotels WHERE state = '" + state + "';"
+    :param sql:
+    :return:
+    """
+    print('SQL: ' + sql)
+    conn = create_connection(DB)
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    print("Found {0} results".format(len(results)))
+    cursor.close()
+    conn.commit()
+    return results
 
 
 def createAccount(firstName, lastName, userName, passWord, cardNum, address):
@@ -227,10 +230,36 @@ def createAccount(firstName, lastName, userName, passWord, cardNum, address):
     return results
 
 
+def getUserID(att, val):
+    query = queries.getUserID(att, val)
+    results = run_query(query)
+    for row in results:
+        # print('userID: ' + row[str('userID')])
+        return row[str('userID')]
+
+
+def updateAccount(id, att, newVal):
+    query = queries.updateAccount(id, att, newVal)
+    run_commit_query(query)
+
+
+def test_createAccount():
+    createAccount('Timmy', 'Tuna', 'ttuna', 'tunasPass', '1726869584736152', '88 Backgammon Blvd')
+    createAccount('Michelle', 'Sleepy', 'sleepym', 'michelleiscool', '8675647362514253', '548 Next Door Street')
+    createAccount('Dingus', 'Tractor', 'dingust', 'dingusHasApass', '8675647361524352', '789 Cant Remember Drive')
+    print("3 accounts successfully added")
+
+
+def test_updateAccount():
+    userID = getUserID('userName', 'butteryb')
+    updateAccount(userID, 'address', '110 Funkytown Drive')
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Bookings Website")
     parser.add_argument('-ca', '--createaccount', dest='createAccount', action='store_true',
+                        help='create a dummy account')
+    parser.add_argument('-ua', '--updateaccount', dest='updateAccount', action='store_true',
                         help='create a dummy account')
     parser.add_argument('-su', '--searchusers', dest='searchUsers', nargs='?', default=None,
                         help='search database for username')
@@ -248,7 +277,7 @@ def main():
 
     if args.searchUsers:
         username = args.searchUsers
-        query = searchUserName(username)
+        query = queries.searchUserName(username)
         results = run_query(query)
 
         print('NAME\t\t\t\tCARD NUMBER\t\t\tADDRESS')
@@ -262,9 +291,9 @@ def main():
     if args.hotelsByState or args.hotelsByCity:
 
         if args.hotelsByState:
-            query = getHotelsByState(args.hotelsByState)
+            query = queries.getHotelsByState(args.hotelsByState)
         else:
-            query = getHotelsByCity(args.hotelsByCity)
+            query = queries.getHotelsByCity(args.hotelsByCity)
 
         results = run_query(query)
 
@@ -277,10 +306,12 @@ def main():
         return 0
 
     if args.createAccount:
-        createAccount('Timmy', 'Tuna', 'ttuna', 'tunasPass', '1726869584736152', '88 Backgammon Blvd')
-        createAccount('Michelle', 'Sleepy', 'sleepym', 'michelleiscool', '8675647362514253', '548 Next Door Street')
-        createAccount('Dingus', 'Tractor', 'dingust', 'dingusHasApass', '8675647361524352', '789 Cant Remember Drive')
-        print("3 accounts successfully added")
+        test_createAccount()
+        return 0
+
+    if args.updateAccount:
+        test_updateAccount()
+
 
     main_account_screen()
 

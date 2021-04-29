@@ -14,6 +14,15 @@ def getHotelsByState(state):
     return "SELECT * FROM Hotels WHERE state = '" + state + "';"
 
 
+def getUserID(att, val):
+    return "SELECT userID FROM Users WHERE " + att + " = '" + val + "';"
+
+
+def updateAccount(id, att, newVal):
+    return "UPDATE Users\n" \
+           "SET " + att + " = '" + newVal + "'\n" \
+           "WHERE userID = " + str(id) + ";"
+
 def insertAccount(firstName, lastName, userName, passWord, cardNum, address):
     return "INSERT INTO Users (firstName, lastName, userName, passWord, cardNum, address) \n" \
            "VALUES	('" + firstName +"', '"+ lastName + "', '" + userName +"', '" + passWord + "', '" + cardNum + "', '" + address + "');"
