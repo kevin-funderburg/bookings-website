@@ -20,6 +20,7 @@ CREATE TABLE Rooms (
     num       INTEGER NOT NULL,
     reserved  INTEGER NOT NULL,
     capacity  INTEGER NOT NULL,
+    rate      REAL,
     PRIMARY KEY(roomID),
     FOREIGN KEY(hotelID) REFERENCES Hotels(hotelID)
 );
@@ -27,6 +28,8 @@ CREATE TABLE Rooms (
 CREATE TABLE Dealerships (
     dealerID    INTEGER,
     name        TEXT NOT NULL,
+    city        TEXT NOT NULL,
+    state       TEXT NOT NULL,
     address     TEXT NOT NULL,
     PRIMARY KEY(dealerID)
 );                                          
@@ -38,6 +41,7 @@ CREATE TABLE Cars (
     make      TEXT NOT NULL,
     model     TEXT NOT NULL,
     body      TEXT NOT NULL,
+    rate      REAL,
     PRIMARY KEY(carID),
     FOREIGN KEY(dealerID) REFERENCES Dealerships(dealerID)
 );

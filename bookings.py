@@ -188,6 +188,13 @@ def create_connection(db_file):
 
 
 def run_query(sql):
+    """execute query and return results
+
+    good for performing searches on the database
+
+    :param sql:
+    :return:
+    """
     print('SQL: ' + sql)
     conn = create_connection(DB)
     cursor = conn.cursor()
@@ -217,25 +224,16 @@ def run_commit_query(sql):
     return results
 
 
-def createAccount(firstName, lastName, userName, passWord, cardNum, address):
-    query = queries.insertAccount(firstName, lastName, userName, passWord, cardNum, address)
-    print('SQL: ' + query)
-    conn = create_connection(DB)
-    cursor = conn.cursor()
-    cursor.execute(query)
-    results = cursor.fetchall()
-    print("Found {0} results".format(len(results)))
-    cursor.close()
-    conn.commit()
-    return results
-
-
 def getUserID(att, val):
     query = queries.getUserID(att, val)
     results = run_query(query)
     for row in results:
-        # print('userID: ' + row[str('userID')])
         return row[str('userID')]
+
+
+def createAccount(firstName, lastName, userName, passWord, cardNum, address):
+    query = queries.insertAccount(firstName, lastName, userName, passWord, cardNum, address)
+    run_commit_query(query)
 
 
 def updateAccount(id, att, newVal):
@@ -243,11 +241,30 @@ def updateAccount(id, att, newVal):
     run_commit_query(query)
 
 
+def createHotelListing(name, city, state, address):
+    query = queries.insertHotel(name, city, state, address)
+    run_commit_query(query)
+
+
+def resetDB():
+    query = queries.resetDB()
+    run_commit_query(query)
+
+
 def test_createAccount():
+    print("Testing insertion of 3 new accounts")
     createAccount('Timmy', 'Tuna', 'ttuna', 'tunasPass', '1726869584736152', '88 Backgammon Blvd')
     createAccount('Michelle', 'Sleepy', 'sleepym', 'michelleiscool', '8675647362514253', '548 Next Door Street')
     createAccount('Dingus', 'Tractor', 'dingust', 'dingusHasApass', '8675647361524352', '789 Cant Remember Drive')
     print("3 accounts successfully added")
+
+
+def test_createHotelListing():
+    print("Testing insertion of 3 hotel listings")
+    createHotelListing('Creepy Hotel', 'Area 51', 'New Mexico', '123 Alien Drive')
+    createHotelListing('Ritz Carlton', 'New York', 'New York', '85 Fancypants Lane')
+    createHotelListing('Four Seasons', 'Miami', 'Florida', '987 Coolio Drive')
+    print("3 hotel listings created successfully")
 
 
 def test_updateAccount():
@@ -259,6 +276,10 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Bookings Website")
     parser.add_argument('-ca', '--createaccount', dest='createAccount', action='store_true',
                         help='create a dummy account')
+    parser.add_argument('-rdb', '--resetdb', dest='resetdb', action='store_true',
+                        help='reset the database')
+    parser.add_argument('-thl', '--testCreateHotelListing', dest='test_createHotelListing', action='store_true',
+                        help='test inserting hotel listings')
     parser.add_argument('-ua', '--updateaccount', dest='updateAccount', action='store_true',
                         help='create a dummy account')
     parser.add_argument('-su', '--searchusers', dest='searchUsers', nargs='?', default=None,
@@ -311,7 +332,11 @@ def main():
 
     if args.updateAccount:
         test_updateAccount()
+        return 0
 
+    if args.test_createHotelListing:
+        test_createHotelListing()
+        return 0
 
     main_account_screen()
 

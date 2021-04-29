@@ -31,9 +31,13 @@ class MyTestCase(unittest.TestCase):
         bookings.getHotelsByCity('Austin')
 
     def test_createAccount(self):
-        # bookings.createAccount('Timmy', 'Tuna', 'ttuna', 'tunasPass', '1726869584736152', '88 Backgammon Blvd')
+        bookings.createAccount('Timmy', 'Tuna', 'ttuna', 'tunasPass', '1726869584736152', '88 Backgammon Blvd')
         bookings.createAccount('Michelle', 'Sleepy', 'sleepym', 'michelleiscool', '8675647362514253', '548 Next Door Street')
         bookings.createAccount('Dingus', 'Tractor', 'dingust', 'dingusHasApass', '8675647361524352', '789 Cant Remember Drive')
+
+    def test_updateAccount():
+        userID = bookings.getUserID('userName', 'butteryb')
+        bookings.updateAccount(userID, 'address', '110 Funkytown Drive')
 
 
 if __name__ == '__main__':

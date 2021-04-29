@@ -10,48 +10,48 @@ VALUES ('Ambassador', 'Austin', 'Texas', '72 Amy Street'),
        ('Kate''s Place', 'San Diego', 'California', '85 85th Street');
 
 
-INSERT INTO Rooms (hotelID, num, reserved, capacity)
-VALUES  (5, 102, 1, 2),
-        (4, 301, 0, 2),
-        (5, 201, 0, 3),
-        (6, 104, 0, 2),
-        (6, 202, 0, 4),
-        (7, 103, 1, 2),
-        (7, 202, 1, 4),
-        (8, 301, 0, 3),
-        (8, 204, 0, 2),
-        (9, 101, 0, 3),
-        (9, 204, 1, 2),
-        (1, 103, 1, 2),
-        (2, 201, 0, 2),
-        (2, 101, 0, 4),
-        (1, 250, 1, 2),
-        (3, 300, 0, 4),
-        (4, 500, 0, 2);
+INSERT INTO Rooms (hotelID, num, reserved, capacity, rate)
+VALUES  (5, 102, 1, 2, 99.00),
+        (4, 301, 0, 2, 199.00),
+        (5, 201, 0, 3, 45.00),
+        (6, 104, 0, 2, 89.00),
+        (6, 202, 0, 4, 25.00),
+        (7, 103, 1, 2, 150.00),
+        (7, 202, 1, 4, 100.00),
+        (8, 301, 0, 3, 200.00),
+        (8, 204, 0, 2, 199.99),
+        (9, 101, 0, 3, 85.00),
+        (9, 204, 1, 2, 55.00),
+        (1, 103, 1, 2, 88.00),
+        (2, 201, 0, 2, 75.00),
+        (2, 101, 0, 4, 135.00),
+        (1, 250, 1, 2, 87.00),
+        (3, 300, 0, 4, 300.00),
+        (4, 500, 0, 2, 125.00);
 
 
-INSERT INTO Dealerships (name, address)
-VALUES  ('First Texas Honda', '728 George Street'),
-        ('Toyota of Austin', '23 Salmon Lane'),
-        ('Tesla', '838 Led Zeppelin Drive'),
-        ('Classic Chevrolet', '910 Big Street'),
-        ('Nissan of Fortworth', '838 Coolio Drive'),
-        ('Texas CarOne', '83 Woopdee Doo');
+INSERT INTO Dealerships (name, city, state, address)
+VALUES  ('First Texas Honda', 'Austin', 'Texas', '728 George Street'),
+        ('Toyota of Austin', 'Austin', 'Texas', '23 Salmon Lane'),
+        ('Tesla', 'New York', 'New York', '838 Led Zeppelin Drive'),
+        ('Classic Chevrolet', 'San Francisco', 'California', '910 Big Street'),
+        ('Nissan of Fortworth', 'Portland', 'Oregon', '838 Coolio Drive'),
+        ('Chicago CarOne', 'Chicago', 'Illinois', '83 Woopdee Doo');
 
 
-INSERT INTO Cars (dealerID, reserved, make, model, body)
-VALUES  (1, 1, 'Honda', 'Civic', 'sedan'),
-        (1, 0, 'Honda', 'Ridgeline', 'truck'),
-        (2, 1, 'Jeep', 'Cherokee', 'suv'),
-        (2, 0, 'Nissan', 'Camry', 'sedan'),
-        (3, 0, 'Mazda', 'Miata', 'coupe'),
-        (3, 1, 'Toyota', 'Prius', 'sedan'),
-        (4, 1, 'Tesla', 'Model 3', 'sedan'),
-        (4, 0, 'Toyota', 'Tacoma', 'truck'),
-        (5, 0, 'Honda', 'Civic', 'sedan'),
-        (5, 0, 'Ford', 'Expedition', 'suv'),
-        (6, 1, 'Ford', 'Taurus', 'sedan'),
-        (6, 1, 'Ford', 'Windstar', 'minivan');
+INSERT INTO Cars (dealerID, reserved, make, model, body, rate)
+VALUES  (1, 1, 'Honda', 'Civic', 'sedan', 43.00),
+        (1, 0, 'Honda', 'Ridgeline', 'truck', 58.00),
+        (2, 1, 'Jeep', 'Cherokee', 'suv', 50.00),
+        (2, 0, 'Nissan', 'Camry', 'sedan', 39.00),
+        (3, 0, 'Mazda', 'Miata', 'coupe', 38.00),
+        (3, 1, 'Toyota', 'Prius', 'sedan', 43.00),
+        (4, 1, 'Tesla', 'Model 3', 'sedan', 50.00),
+        (4, 0, 'Toyota', 'Tacoma', 'truck', 52.00),
+        (5, 0, 'Honda', 'Civic', 'sedan', 39.00),
+        (5, 0, 'Ford', 'Expedition', 'suv', 48.00),
+        (6, 1, 'Ford', 'Taurus', 'sedan', 38.00),
+        (6, 1, 'Ford', 'Windstar', 'minivan', 42.00);
 
 
 INSERT INTO Users (firstName, lastName, userName, passWord, cardNum, address)
