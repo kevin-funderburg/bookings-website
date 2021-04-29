@@ -41,9 +41,9 @@ class MyTestCase(unittest.TestCase):
 
     def test_createHotelListing():
         print("Testing insertion of 3 hotel listings")
-        createHotelListing('Creepy Hotel', 'Area 51', 'New Mexico', '123 Alien Drive')
-        createHotelListing('Ritz Carlton', 'New York', 'New York', '85 Fancypants Lane')
-        createHotelListing('Four Seasons', 'Miami', 'Florida', '987 Coolio Drive')
+        bookings.createHotelListing('Creepy Hotel', 'Area 51', 'New Mexico', '123 Alien Drive')
+        bookings.createHotelListing('Ritz Carlton', 'New York', 'New York', '85 Fancypants Lane')
+        bookings.createHotelListing('Four Seasons', 'Miami', 'Florida', '987 Coolio Drive')
         print("3 hotel listings created successfully")
 
 

@@ -14,6 +14,14 @@ def getHotelsByState(state):
     return "SELECT * FROM Hotels WHERE state = '" + state + "';"
 
 
+def getDealersByCity(city, state):
+    return "SELECT * FROM Dealerships WHERE city = '" + city + "' and state = '" + state + "';"
+
+
+def getDealersByState(state):
+    return "SELECT * FROM Dealerships WHERE state = '" + state + "';"
+
+
 def getUserID(att, val):
     return "SELECT userID FROM Users WHERE " + att + " = '" + val + "';"
 
@@ -22,10 +30,20 @@ def getHotelID(name, city):
     return "SELECT hotelID FROM Hotels WHERE name = '" + name + "' and city = '" + city + "';"
 
 
+def getDealerID(name, city):
+    return "SELECT dealerID FROM Dealerships WHERE name = '" + name + "' and city = '" + city + "';"
+
+
 def updateHotel(id, att, newVal):
     return "UPDATE Hotels\n" \
            "SET " + att + " = '" + newVal + "'\n" \
            "WHERE hotelID = " + str(id) + ";"
+
+
+def updateDealership(id, att, newVal):
+    return "UPDATE Dealerships\n" \
+           "SET " + att + " = '" + newVal + "'\n" \
+           "WHERE dealerID = " + str(id) + ";"
 
 
 def updateAccount(id, att, newVal):

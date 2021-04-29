@@ -237,6 +237,13 @@ def getHotelID(name, city):
         return row[str('hotelID')]
 
 
+def getDealerID(name, city):
+    query = queries.getDealerID(name, city)
+    results = run_query(query)
+    for row in results:
+        return row[str('dealerID')]
+
+
 def resetDB():
     query = open('sql/schema.sql', 'r').read()
     conn = sqlite3.connect('data.db')
@@ -257,18 +264,23 @@ def updateAccount(id, att, newVal):
     run_commit_query(query)
 
 
-def updateHotel(id, att, newVal):
-    query = queries.updateHotel(id, att, newVal)
-    run_commit_query(query)
-
-
 def createHotelListing(name, city, state, address):
     query = queries.insertHotel(name, city, state, address)
     run_commit_query(query)
 
 
+def updateHotel(id, att, newVal):
+    query = queries.updateHotel(id, att, newVal)
+    run_commit_query(query)
+
+
 def createDealershipListing(name, city, state, address):
     query = queries.insertDealership(name, city, state, address)
+    run_commit_query(query)
+
+
+def updateDealership(id, att, newVal):
+    query = queries.updateDealership(id, att, newVal)
     run_commit_query(query)
 
 
@@ -322,6 +334,15 @@ def test_updateHotel():
     print("\n1 hotel updated successfully\n\n")
 
 
+def test_updateDealership():
+    print("-----------------------------------\n"
+          "Testing updating car dealership listing information\n"
+          "-----------------------------------")
+    dealerID = getDealerID('Tesla', 'New York')
+    updateDealership(dealerID, 'address', '999 Black Sabbath Road')
+    print("\n1 dealership updated successfully\n\n")
+
+
 def test_searchHotelsByCity():
     print("-----------------------------------\n"
           "Searching database for hotels in a city\n"
@@ -335,7 +356,7 @@ def test_searchHotelsByCity():
         print("no hotels found in " + city + ", " + state)
         return
 
-    printHotelResults(results)
+    printDBresults(results)
 
     print("\nhotels searched successfully\n\n")
 
@@ -352,12 +373,47 @@ def test_searchHotelsByState():
         print("no hotels found in " + state)
         return
 
-    printHotelResults(results)
+    printDBresults(results)
 
     print("\nhotels searched successfully\n\n")
 
 
-def printHotelResults(results):
+def test_searchDealersByCity():
+    print("-----------------------------------\n"
+          "Searching database for dealerships in a city\n"
+          "-----------------------------------")
+    city = 'New York'
+    state = 'New York'
+    query = queries.getDealersByCity(city, state)
+    results = run_query(query)
+
+    if len(results) == 0:
+        print("no hotels found in " + city + ", " + state)
+        return
+
+    printDBresults(results)
+
+    print("\nDealerships searched successfully\n\n")
+
+
+def test_searchDealersByState():
+    print("-----------------------------------\n"
+          "Searching database for dealerships in a state\n"
+          "-----------------------------------")
+    state = 'California'
+    query = queries.getDealersByState(state)
+    results = run_query(query)
+
+    if len(results) == 0:
+        print("no hotels found in " + state)
+        return
+
+    printDBresults(results)
+
+    print("\nDealerships searched successfully\n\n")
+
+
+def printDBresults(results):
     print('NAME\t\t\tCITY\t\tSTATE\t\tADDRESS')
     for row in results:
         print(row[str('name')] + '\t\t' +
@@ -378,10 +434,16 @@ def parse_args():
                         help='search database for hotels in a city')
     parser.add_argument('-ths', '--testHotelsByState', dest='test_searchHotelsByState', action='store_true',
                         help='search database for hotels in a state')
+    parser.add_argument('-tdc', '--testDealersByCity', dest='test_searchDealersByCity', action='store_true',
+                        help='search database for hotels in a city')
+    parser.add_argument('-tds', '--testDealersByState', dest='test_searchDealersByState', action='store_true',
+                        help='search database for hotels in a state')
     parser.add_argument('-thl', '--testCreateHotelListing', dest='test_createHotelListing', action='store_true',
                         help='test inserting hotel listings')
     parser.add_argument('-tdl', '--testCreateDealershipListing', dest='test_createDealershipListing', action='store_true',
                         help='test inserting hotel listings')
+    parser.add_argument('-tud', '--testUpdateDealership', dest='test_updateDealership', action='store_true',
+                        help='test updating dealership listing')
     parser.add_argument('-tua', '--testUpdateaccount', dest='test_updateAccount', action='store_true',
                         help='create a dummy account')
     parser.add_argument('-tuh', '--testUpdateHotel', dest='test_updateHotel', action='store_true',
@@ -425,8 +487,16 @@ def main():
         test_createHotelListing()
         return 0
 
+    if args.test_updateHotel:
+        test_updateHotel()
+        return 0
+
     if args.test_createDealershipListing:
         test_createDealershipListing()
+        return 0
+
+    if args.test_updateDealership:
+        test_updateDealership()
         return 0
 
     if args.test_searchHotelsByCity:
@@ -437,8 +507,12 @@ def main():
         test_searchHotelsByState()
         return 0
 
-    if args.test_updateHotel:
-        test_updateHotel()
+    if args.test_searchDealersByCity:
+        test_searchDealersByCity()
+        return 0
+
+    if args.test_searchDealersByState:
+        test_searchDealersByState()
         return 0
 
     if args.test_all:
@@ -447,8 +521,11 @@ def main():
         test_createDealershipListing()
         test_createHotelListing()
         test_updateHotel()
+        test_updateDealership()
         test_searchHotelsByState()
         test_searchHotelsByCity()
+        test_searchHotelsByState()
+        test_searchDealersByCity()
         return 0
 
     # main_account_screen()
