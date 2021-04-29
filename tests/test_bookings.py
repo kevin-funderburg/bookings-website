@@ -39,6 +39,13 @@ class MyTestCase(unittest.TestCase):
         userID = bookings.getUserID('userName', 'butteryb')
         bookings.updateAccount(userID, 'address', '110 Funkytown Drive')
 
+    def test_createHotelListing():
+        print("Testing insertion of 3 hotel listings")
+        createHotelListing('Creepy Hotel', 'Area 51', 'New Mexico', '123 Alien Drive')
+        createHotelListing('Ritz Carlton', 'New York', 'New York', '85 Fancypants Lane')
+        createHotelListing('Four Seasons', 'Miami', 'Florida', '987 Coolio Drive')
+        print("3 hotel listings created successfully")
+
 
 if __name__ == '__main__':
     unittest.main()

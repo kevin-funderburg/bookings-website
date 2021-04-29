@@ -218,7 +218,6 @@ def run_commit_query(sql):
     cursor = conn.cursor()
     cursor.execute(sql)
     results = cursor.fetchall()
-    print("Found {0} results".format(len(results)))
     cursor.close()
     conn.commit()
     return results
@@ -231,6 +230,23 @@ def getUserID(att, val):
         return row[str('userID')]
 
 
+def getHotelID(name, city):
+    query = queries.getHotelID(name, city)
+    results = run_query(query)
+    for row in results:
+        return row[str('hotelID')]
+
+
+def resetDB():
+    query = open('sql/schema.sql', 'r').read()
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute(query)
+    conn.commit()
+    c.close()
+    conn.close()
+
+
 def createAccount(firstName, lastName, userName, passWord, cardNum, address):
     query = queries.insertAccount(firstName, lastName, userName, passWord, cardNum, address)
     run_commit_query(query)
@@ -241,35 +257,75 @@ def updateAccount(id, att, newVal):
     run_commit_query(query)
 
 
+def updateHotel(id, att, newVal):
+    query = queries.updateHotel(id, att, newVal)
+    run_commit_query(query)
+
+
 def createHotelListing(name, city, state, address):
     query = queries.insertHotel(name, city, state, address)
     run_commit_query(query)
 
 
-def resetDB():
-    query = queries.resetDB()
-    run_commit_query(query)
-
-
 def test_createAccount():
-    print("Testing insertion of 3 new accounts")
+    print("-----------------------------------\n"
+          "Testing insertion of 3 new accounts\n"
+          "-----------------------------------")
     createAccount('Timmy', 'Tuna', 'ttuna', 'tunasPass', '1726869584736152', '88 Backgammon Blvd')
     createAccount('Michelle', 'Sleepy', 'sleepym', 'michelleiscool', '8675647362514253', '548 Next Door Street')
     createAccount('Dingus', 'Tractor', 'dingust', 'dingusHasApass', '8675647361524352', '789 Cant Remember Drive')
-    print("3 accounts successfully added")
+    print("\n3 accounts successfully added\n\n")
 
 
 def test_createHotelListing():
-    print("Testing insertion of 3 hotel listings")
+    print("-----------------------------------\n"
+          "Testing insertion of 3 hotel listings\n"
+          "-----------------------------------")
     createHotelListing('Creepy Hotel', 'Area 51', 'New Mexico', '123 Alien Drive')
     createHotelListing('Ritz Carlton', 'New York', 'New York', '85 Fancypants Lane')
     createHotelListing('Four Seasons', 'Miami', 'Florida', '987 Coolio Drive')
-    print("3 hotel listings created successfully")
+    print("\n3 hotel listings created successfully\n\n")
 
 
 def test_updateAccount():
+    print("-----------------------------------\n"
+          "Testing updating a users account\n"
+          "-----------------------------------")
     userID = getUserID('userName', 'butteryb')
     updateAccount(userID, 'address', '110 Funkytown Drive')
+    print("\n1 account updated successfully\n\n")
+
+
+def test_updateHotel():
+    print("-----------------------------------\n"
+          "Testing updating hotel listing information\n"
+          "-----------------------------------")
+    hotelID = getHotelID('Ambassador', 'Austin')
+    updateHotel(hotelID, 'address', '172 Amy Street')
+    print("\n1 hotel updated successfully\n\n")
+
+
+def test_searchHotelsByCity():
+    print("-----------------------------------\n"
+          "Searching database for hotels in a city\n"
+          "-----------------------------------")
+    city = 'Austin'
+    state = 'Texas'
+    query = queries.getHotelsByCity(city, state)
+    results = run_query(query)
+
+    if len(results) == 0:
+        print("no hotels found in " + city + ", " + state)
+        return
+
+    print('NAME\t\t\tCITY\t\tSTATE\t\tADDRESS')
+    for row in results:
+        print(row[str('name')] + '\t\t' +
+              row[str('city')] + '\t\t' +
+              row[str('state')] + '\t\t' +
+              row[str('address')])
+
+    print("\nhotels searched successfully\n\n")
 
 
 def parse_args():
@@ -278,16 +334,20 @@ def parse_args():
                         help='create a dummy account')
     parser.add_argument('-rdb', '--resetdb', dest='resetdb', action='store_true',
                         help='reset the database')
-    parser.add_argument('-thl', '--testCreateHotelListing', dest='test_createHotelListing', action='store_true',
-                        help='test inserting hotel listings')
-    parser.add_argument('-ua', '--updateaccount', dest='updateAccount', action='store_true',
-                        help='create a dummy account')
     parser.add_argument('-su', '--searchusers', dest='searchUsers', nargs='?', default=None,
                         help='search database for username')
     parser.add_argument('-hs', '--hotelsbystate', dest='hotelsByState', nargs='?', default=None,
                         help='search database for hotels in a state')
-    parser.add_argument('-hc', '--hotelsbycity', dest='hotelsByCity', nargs='?', default=None,
+    parser.add_argument('-thc', '--testHotelsByCity', dest='test_searchHotelsByCity', action='store_true',
                         help='search database for hotels in a city')
+    parser.add_argument('-thl', '--testCreateHotelListing', dest='test_createHotelListing', action='store_true',
+                        help='test inserting hotel listings')
+    parser.add_argument('-tua', '--testUpdateaccount', dest='test_updateAccount', action='store_true',
+                        help='create a dummy account')
+    parser.add_argument('-tuh', '--testUpdateHotel', dest='test_updateHotel', action='store_true',
+                        help='test updating hotel listing')
+    parser.add_argument('-ta', '--testAll', dest='test_all', action='store_true',
+                        help='run all tests')
     return parser.parse_args()
 
 
@@ -309,34 +369,53 @@ def main():
                   row[str('address')])
         return 0
 
-    if args.hotelsByState or args.hotelsByCity:
+    # if args.hotelsByState or args.hotelsByCity:
+    #
+    #     if args.hotelsByState:
+    #         query = queries.getHotelsByState(args.hotelsByState)
+    #     else:
+    #         query = queries.getHotelsByCity(args.hotelsByCity)
+    #
+    #     results = run_query(query)
+    #
+    #     print('NAME\t\t\tCITY\t\tSTATE\t\tADDRESS')
+    #     for row in results:
+    #         print(row[str('name')] + '\t\t' +
+    #               row[str('city')] + '\t\t' +
+    #               row[str('state')] + '\t\t' +
+    #               row[str('address')])
+    #     return 0
 
-        if args.hotelsByState:
-            query = queries.getHotelsByState(args.hotelsByState)
-        else:
-            query = queries.getHotelsByCity(args.hotelsByCity)
-
-        results = run_query(query)
-
-        print('NAME\t\t\tCITY\t\tSTATE\t\tADDRESS')
-        for row in results:
-            print(row[str('name')] + '\t\t' +
-                  row[str('city')] + '\t\t' +
-                  row[str('state')] + '\t\t' +
-                  row[str('address')])
+    if args.resetdb:
+        resetDB()
         return 0
 
     if args.createAccount:
         test_createAccount()
         return 0
 
-    if args.updateAccount:
+    if args.test_updateAccount:
         test_updateAccount()
         return 0
 
     if args.test_createHotelListing:
         test_createHotelListing()
         return 0
+
+    if args.test_searchHotelsByCity:
+        test_searchHotelsByCity()
+        return 0
+
+    if args.test_updateHotel:
+        test_updateHotel()
+        return 0
+
+    if args.testAll:
+        test_createAccount()
+        test_updateAccount()
+        test_createHotelListing()
+        test_updateHotel()
+
 
     main_account_screen()
 
