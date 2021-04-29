@@ -4,6 +4,7 @@ import sqlite3
 from sqlite3 import Error
 from tkinter import *
 import os
+import queries
 
 DB = 'data.db'  # database name
 
@@ -213,11 +214,30 @@ def getHotelsByState(state):
     return "SELECT * FROM Hotels WHERE state = '" + state + "';"
 
 
+def createAccount(firstName, lastName, userName, passWord, cardNum, address):
+    query = queries.insertAccount(firstName, lastName, userName, passWord, cardNum, address)
+    print('SQL: ' + query)
+    conn = create_connection(DB)
+    cursor = conn.cursor()
+    cursor.execute(query)
+    results = cursor.fetchall()
+    print("Found {0} results".format(len(results)))
+    cursor.close()
+    conn.commit()
+    return results
+
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Bookings Website")
-    parser.add_argument('-su', '--searchusers', dest='searchUsers', nargs='?', default=None)
-    parser.add_argument('-hs', '--hotelsbystate', dest='hotelsByState', nargs='?', default=None)
-    parser.add_argument('-hc', '--hotelsbycity', dest='hotelsByCity', nargs='?', default=None)
+    parser.add_argument('-ca', '--createaccount', dest='createAccount', action='store_true',
+                        help='create a dummy account')
+    parser.add_argument('-su', '--searchusers', dest='searchUsers', nargs='?', default=None,
+                        help='search database for username')
+    parser.add_argument('-hs', '--hotelsbystate', dest='hotelsByState', nargs='?', default=None,
+                        help='search database for hotels in a state')
+    parser.add_argument('-hc', '--hotelsbycity', dest='hotelsByCity', nargs='?', default=None,
+                        help='search database for hotels in a city')
     return parser.parse_args()
 
 
@@ -240,6 +260,7 @@ def main():
         return 0
 
     if args.hotelsByState or args.hotelsByCity:
+
         if args.hotelsByState:
             query = getHotelsByState(args.hotelsByState)
         else:
@@ -254,6 +275,12 @@ def main():
                   row[str('state')] + '\t\t' +
                   row[str('address')])
         return 0
+
+    if args.createAccount:
+        createAccount('Timmy', 'Tuna', 'ttuna', 'tunasPass', '1726869584736152', '88 Backgammon Blvd')
+        createAccount('Michelle', 'Sleepy', 'sleepym', 'michelleiscool', '8675647362514253', '548 Next Door Street')
+        createAccount('Dingus', 'Tractor', 'dingust', 'dingusHasApass', '8675647361524352', '789 Cant Remember Drive')
+        print("3 accounts successfully added")
 
     main_account_screen()
 
